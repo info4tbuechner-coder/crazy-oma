@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { analyzeConversation } from '../services/geminiService';
 import { useSessionState } from '../hooks/useSessionState';
@@ -121,11 +120,11 @@ const App: React.FC = () => {
     if (!isAuthenticated) return <LoginScreen onLoginSuccess={() => setIsAuthenticated(true)} />;
 
     return (
-        <div className={`min-h-screen bg-slate-950 text-slate-300 font-sans selection:bg-brand-primary/40 ${settings.enableCrtEffect ? 'crt-effect' : ''}`}>
+        <div className={`min-h-[100dvh] bg-slate-950 text-slate-300 font-sans selection:bg-brand-primary/40 ${settings.enableCrtEffect ? 'crt-effect' : ''}`}>
             
             {/* Offline Banner */}
             {!isOnline && (
-                <div className="fixed top-0 left-0 right-0 z-[100] bg-brand-accent/90 text-white text-[10px] font-black uppercase tracking-[0.4em] py-2 text-center backdrop-blur-md animate-fade-in font-mono">
+                <div className="fixed top-0 left-0 right-0 z-[100] bg-brand-accent/90 text-white text-[10px] font-black uppercase tracking-[0.4em] py-2 text-center backdrop-blur-md animate-fade-in font-mono pt-[max(env(safe-area-inset-top),0.5rem)]">
                     System-Konnektivität unterbrochen | Offline-Modus aktiv
                 </div>
             )}
@@ -142,7 +141,7 @@ const App: React.FC = () => {
                 activeView={currentView}
             />
             
-            <main className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-6 md:py-12 transition-all duration-700">
+            <main className="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-6 md:py-12 transition-all duration-700 pb-32 md:pb-12">
                 <div className="animate-fade-in">
                     {currentView === 'main' ? (
                         <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 md:gap-12 items-start">
@@ -172,17 +171,23 @@ const App: React.FC = () => {
                 </div>
             </main>
 
-            <div className="fixed bottom-6 right-6 md:bottom-12 md:right-12 flex flex-col gap-4 md:gap-6 z-50 no-print">
+            {/* Floating Action Buttons with Safe Area support */}
+            <div 
+                className="fixed right-6 md:right-12 flex flex-col gap-4 md:gap-6 z-50 no-print"
+                style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom, 24px))' }}
+            >
                 <button
                     onClick={handlePanic}
                     className="p-4 md:p-6 bg-brand-accent/10 backdrop-blur-md border border-brand-accent/30 text-brand-accent rounded-full md:rounded-[2.5rem] shadow-2xl hover:bg-brand-accent hover:text-white hover:scale-105 active:scale-95 transition-all group flex items-center gap-4 overflow-hidden"
+                    aria-label="Notfall Reset"
                 >
                     <TrashIcon className="h-6 w-6" />
-                    <span className="max-w-0 group-hover:max-w-xs transition-all duration-500 uppercase text-[9px] font-black tracking-[0.3em] whitespace-nowrap">Panic</span>
+                    <span className="max-w-0 group-hover:max-w-xs transition-all duration-500 uppercase text-[9px] font-black tracking-[0.3em] whitespace-nowrap hidden md:block">Panic</span>
                 </button>
                 <button
                     onClick={() => { vibrate(10); setIsHistoryOpen(true); }}
                     className="p-4 md:p-6 bg-slate-900/80 backdrop-blur-md border border-slate-700 text-brand-primary rounded-full md:rounded-[2.5rem] shadow-2xl hover:bg-slate-800 hover:border-brand-primary hover:scale-105 active:scale-95 transition-all"
+                    aria-label="Verlauf öffnen"
                 >
                     <HistoryIcon className="h-6 w-6" />
                 </button>

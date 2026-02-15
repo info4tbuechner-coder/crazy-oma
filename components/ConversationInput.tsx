@@ -78,12 +78,13 @@ const ConversationInput: React.FC<ConversationInputProps> = ({ onAnalyze, isLoad
                     </div>
                     
                     <div className="relative group/field">
+                        {/* Mobile Text Size: text-base prevents iOS zoom on focus. Desktop returns to text-sm/base */}
                         <textarea
                             rows={8}
                             value={conversation}
                             onChange={(e) => setConversation(e.target.value)}
                             placeholder="Protokoll-Daten hier einspeisen..."
-                            className={`w-full bg-slate-950/70 border-2 border-slate-800 rounded-2xl md:rounded-[3rem] text-sm md:text-base focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary/30 transition-all p-6 md:p-12 placeholder-slate-800 font-mono leading-relaxed resize-none ${isLimitExceeded ? 'border-brand-accent ring-brand-accent/10' : ''}`}
+                            className={`w-full bg-slate-950/70 border-2 border-slate-800 rounded-2xl md:rounded-[3rem] text-base md:text-lg focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary/30 transition-all p-6 md:p-12 placeholder-slate-800 font-mono leading-relaxed resize-none ${isLimitExceeded ? 'border-brand-accent ring-brand-accent/10' : ''}`}
                         />
                         <div className="absolute bottom-4 right-4 md:bottom-10 md:right-12 flex items-center gap-3 md:gap-6 bg-slate-950/95 rounded-xl border border-slate-800 px-4 py-1.5 md:px-7 md:py-3 shadow-4xl backdrop-blur-md">
                              <div className="hidden md:block w-28 h-1.5 bg-slate-900 rounded-full overflow-hidden border border-slate-800/50">
@@ -97,12 +98,13 @@ const ConversationInput: React.FC<ConversationInputProps> = ({ onAnalyze, isLoad
 
                     <div className="flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-6">
                         <div className="relative">
+                             {/* Mobile Text Size: text-base prevents iOS zoom */}
                             <input
                                 type="text"
                                 value={context}
                                 onChange={(e) => setContext(e.target.value)}
                                 placeholder="Kontext-Variablen..."
-                                className="w-full bg-slate-950/80 border-2 border-slate-800 rounded-xl md:rounded-[2.2rem] text-xs focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary/30 transition-all px-6 py-4 md:px-10 md:py-6 placeholder-slate-800 font-sans shadow-inner"
+                                className="w-full bg-slate-950/80 border-2 border-slate-800 rounded-xl md:rounded-[2.2rem] text-base md:text-sm focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary/30 transition-all px-6 py-4 md:px-10 md:py-6 placeholder-slate-800 font-sans shadow-inner"
                             />
                         </div>
                         <button 
@@ -121,7 +123,7 @@ const ConversationInput: React.FC<ConversationInputProps> = ({ onAnalyze, isLoad
                         onClick={() => onAnalyze(conversation, context)} 
                         isLoading={isLoading} 
                         disabled={isLimitExceeded || !conversation.trim()}
-                        className="w-full !rounded-2xl md:!rounded-[4rem] !py-8 md:!py-12 !bg-gradient-to-r from-brand-primary to-brand-secondary hover:brightness-110 shadow-3xl shadow-brand-primary/20 transition-all font-display text-lg md:text-2xl font-black tracking-tight uppercase active:scale-[0.98]"
+                        className="w-full !rounded-2xl md:!rounded-[4rem] !py-6 md:!py-12 !bg-gradient-to-r from-brand-primary to-brand-secondary hover:brightness-110 shadow-3xl shadow-brand-primary/20 transition-all font-display text-lg md:text-2xl font-black tracking-tight uppercase active:scale-[0.98]"
                     >
                         Analyse Starten
                     </Button>
