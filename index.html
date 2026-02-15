@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+    <title>RDA OMEGA | Forensische Kommunikationsevaluation</title>
+
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#020617" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="RDA OMEGA">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@300;400;500;600;700;800&family=Lexend:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Lexend', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: { 950: '#020617' },
+                        brand: {
+                            primary: '#0ea5e9',
+                            secondary: '#6366f1',
+                            accent: '#f43f5e',
+                            clinical: '#14b8a6',
+                            warning: '#f59e0b',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 10s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'scan': 'scan 8s linear infinite',
+                        'glow-pulse': 'glowPulse 4s ease-in-out infinite',
+                        'noise': 'noise 0.3s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'h-pulse': 'hPulse 1.5s ease-in-out infinite',
+                        'glitch': 'glitch 1s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        glowPulse: { 
+                            '0%, 100%': { opacity: '0.2', filter: 'brightness(1) blur(40px)' }, 
+                            '50%': { opacity: '0.4', filter: 'brightness(1.4) blur(60px)' } 
+                        },
+                        noise: {
+                            '0%, 100%': { transform: 'translate(0,0)' },
+                            '10%': { transform: 'translate(-1px,-1px)' },
+                            '20%': { transform: 'translate(-2px,1px)' },
+                            '30%': { transform: 'translate(1px,-1px)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        scan: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(100vh)' } },
+                        hPulse: {
+                            '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+                            '50%': { opacity: '0.9', transform: 'scale(1.02)' }
+                        }
+                    }
+                },
+            },
+        };
+    </script>
+    
+    <style>
+        :root {
+            --sat: env(safe-area-inset-top);
+            --sar: env(safe-area-inset-right);
+            --sab: env(safe-area-inset-bottom);
+            --sal: env(safe-area-inset-left);
+        }
+
+        body { 
+            @apply bg-slate-950 text-slate-400 antialiased selection:bg-brand-primary/30;
+            padding-top: var(--sat);
+            padding-right: var(--sar);
+            padding-bottom: var(--sab);
+            padding-left: var(--sal);
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .terminal-grid { 
+            background-image: 
+                linear-gradient(rgba(14, 165, 233, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(14, 165, 233, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px; 
+        }
+
+        .forensic-panel {
+            @apply bg-[#050b16]/90 backdrop-blur-3xl border border-slate-800/40;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), inset 0 0 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .crt-effect::after {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.005), rgba(0, 255, 0, 0.003), rgba(0, 0, 255, 0.005));
+            z-index: 9999;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.2;
+        }
+
+        /* Forensic Text Highlights */
+        .highlight-critical {
+            @apply bg-brand-accent/5 border-b-2 border-brand-accent/40 cursor-pointer transition-all duration-300 relative;
+            box-shadow: inset 0 -4px 12px -4px rgba(244, 63, 94, 0.2);
+        }
+
+        .highlight-warning {
+            @apply bg-brand-warning/5 border-b-2 border-brand-warning/40 cursor-pointer transition-all duration-300 relative;
+            box-shadow: inset 0 -4px 12px -4px rgba(245, 158, 11, 0.2);
+        }
+
+        .highlight-active {
+            @apply bg-brand-primary/20 border-b-4 border-brand-primary text-white scale-[1.02] shadow-[0_0_25px_rgba(14,165,233,0.4)] z-10 animate-h-pulse;
+        }
+
+        .scanline-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 120px;
+            background: linear-gradient(to bottom, transparent, rgba(14, 165, 233, 0.08), transparent);
+            animation: scanlineMove 12s linear infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes scanlineMove {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-thumb { @apply bg-brand-primary/20 rounded-full hover:bg-brand-primary/50 transition-all; }
+        
+        .noise-bg {
+            background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+            opacity: 0.04;
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        .mask-fade-b {
+            mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+        }
+
+        .glossy-header {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.6) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "pdfjs-dist": "https://esm.sh/pdfjs-dist@4.4.168",
+    "@google/genai": "https://esm.sh/@google/genai@1.27.0",
+    "recharts": "https://esm.sh/recharts@2.13.0?deps=react@19.0.0,react-dom@19.0.0",
+    "@headlessui/react": "https://esm.sh/@headlessui/react@2.2.9?deps=react@19.0.0,react-dom@19.0.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
+</head>
+<body class="terminal-grid">
+    <div class="noise-bg"></div>
+    <div id="root"></div>
+    <div id="print-root" class="hidden"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>

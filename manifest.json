@@ -1,0 +1,32 @@
+
+{
+  "short_name": "RDA Pro",
+  "name": "RDA Professional - Relational Dynamics Analyzer",
+  "description": "Klinische Analyse-Suite zur Untersuchung von Kommunikationsprotokollen auf manipulative Muster.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#020617",
+  "background_color": "#020617",
+  "orientation": "portrait-primary",
+  "categories": ["medical", "productivity", "health"]
+}

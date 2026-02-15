@@ -1,0 +1,19 @@
+{
+  "name": "Crazy Oma | RDA Pro Suite",
+  "short_name": "RDA Pro",
+  "description": "Forensische Analyse-Suite zur Dekonstruktion manipulativer Kommunikationsmuster.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera",
+    "geolocation"
+  ],
+  "theme_color": "#020617",
+  "background_color": "#020617",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "categories": [
+    "medical",
+    "productivity",
+    "health"
+  ]
+}
