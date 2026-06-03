@@ -14,7 +14,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, onSettingsChange 
     };
 
     return (
-        <Card className="animate-fade-in border-slate-800 p-10 rounded-[3rem] bg-slate-900/40 relative overflow-hidden">
+        <Card className="animate-fade-in border-slate-800 p-6 sm:p-10 rounded-2xl sm:rounded-[3rem] bg-slate-900/40 relative overflow-hidden">
             <div className="absolute inset-0 terminal-grid opacity-[0.05] pointer-events-none"></div>
             
             <div className="flex items-center gap-6 mb-12 border-b border-slate-800 pb-8 relative z-10">

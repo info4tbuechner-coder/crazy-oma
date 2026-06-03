@@ -181,25 +181,25 @@ const App: React.FC = () => {
 
             {/* Floating Action Buttons with Safe Area support & IDs for Tour */}
             <div 
-                className="fixed right-6 md:right-12 flex flex-col gap-4 md:gap-6 z-50 no-print"
+                className="fixed right-4 sm:right-6 md:right-12 flex flex-col gap-3 md:gap-6 z-50 no-print"
                 style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom, 24px))' }}
             >
                 <button
                     id="tour-panic-btn" // Added ID
                     onClick={handlePanic}
-                    className="p-4 md:p-6 bg-brand-accent/10 backdrop-blur-md border border-brand-accent/30 text-brand-accent rounded-full md:rounded-[2.5rem] shadow-2xl hover:bg-brand-accent hover:text-white hover:scale-105 active:scale-95 transition-all group flex items-center gap-4 overflow-hidden"
+                    className="p-3 sm:p-4 md:p-6 bg-brand-accent/10 backdrop-blur-md border border-brand-accent/30 text-brand-accent rounded-full md:rounded-[2.5rem] shadow-2xl hover:bg-brand-accent hover:text-white hover:scale-105 active:scale-95 transition-all group flex items-center gap-4 overflow-hidden"
                     aria-label="Notfall Reset"
                 >
-                    <TrashIcon className="h-6 w-6" />
+                    <TrashIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                     <span className="max-w-0 group-hover:max-w-xs transition-all duration-500 uppercase text-[9px] font-black tracking-[0.3em] whitespace-nowrap hidden md:block">Panic</span>
                 </button>
                 <button
                     id="tour-history-btn" // Added ID
                     onClick={() => { vibrate(10); setIsHistoryOpen(true); }}
-                    className="p-4 md:p-6 bg-slate-900/80 backdrop-blur-md border border-slate-700 text-brand-primary rounded-full md:rounded-[2.5rem] shadow-2xl hover:bg-slate-800 hover:border-brand-primary hover:scale-105 active:scale-95 transition-all"
+                    className="p-3 sm:p-4 md:p-6 bg-slate-900/80 backdrop-blur-md border border-slate-700 text-brand-primary rounded-full md:rounded-[2.5rem] shadow-2xl hover:bg-slate-800 hover:border-brand-primary hover:scale-105 active:scale-95 transition-all"
                     aria-label="Verlauf öffnen"
                 >
-                    <HistoryIcon className="h-6 w-6" />
+                    <HistoryIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
             </div>
             

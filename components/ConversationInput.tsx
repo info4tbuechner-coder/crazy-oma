@@ -352,7 +352,7 @@ const ConversationInput: React.FC<ConversationInputProps> = ({ onAnalyze, isLoad
                                 value={conversation}
                                 onChange={(e) => setConversation(e.target.value)}
                                 placeholder="Gesprächsprotokoll, Chat, Transkripte oder Audio hier einspeisen (auch einfach Drag-and-Drop von Audio/PDF-Dateien)..."
-                                className={`w-full bg-slate-950/70 border-2 border-slate-800 rounded-2xl md:rounded-[3rem] text-base md:text-lg focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary/30 transition-all p-6 md:p-12 placeholder-slate-800 font-mono leading-relaxed resize-none ${
+                                className={`w-full bg-slate-950/70 border-2 border-slate-800 rounded-2xl md:rounded-[3rem] text-sm sm:text-base md:text-lg focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary/30 transition-all p-4 sm:p-6 md:p-12 pb-16 sm:pb-20 md:pb-12 placeholder-slate-800 font-mono leading-relaxed resize-none ${
                                     isLimitExceeded ? 'border-brand-accent ring-brand-accent/10' : ''
                                 }`}
                             />
@@ -382,12 +382,12 @@ const ConversationInput: React.FC<ConversationInputProps> = ({ onAnalyze, isLoad
                                 value={context}
                                 onChange={(e) => setContext(e.target.value)}
                                 placeholder="Kontext-Variablen (z.B. Erpressungsversuch, Schwiegermutter, WhatsApp-Chat)..."
-                                className="w-full bg-slate-950/80 border-2 border-slate-800 rounded-xl md:rounded-[2.2rem] text-base md:text-sm focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary/30 transition-all px-6 py-4 md:px-10 md:py-6 placeholder-slate-800 font-sans shadow-inner"
+                                className="w-full bg-slate-950/80 border-2 border-slate-800 rounded-xl md:rounded-[2.2rem] text-sm sm:text-base md:text-sm focus:ring-4 focus:ring-brand-primary/5 focus:border-brand-primary/30 transition-all px-4 py-3 sm:px-6 sm:py-4 md:px-10 md:py-6 placeholder-slate-800 font-sans shadow-inner text-white"
                             />
                         </div>
                         <button 
                             onClick={() => fileInputRef.current?.click()} 
-                            className="flex items-center justify-center gap-3 px-6 py-4 md:px-10 md:py-6 bg-slate-950/50 border-2 border-slate-800 rounded-xl md:rounded-[2.2rem] text-[10px] md:text-[11px] text-slate-500 hover:text-white hover:border-brand-primary/30 transition-all uppercase tracking-[0.2em] md:tracking-[0.4em] font-black group/btn active:scale-95"
+                            className="flex items-center justify-center gap-3 px-4 py-3 sm:px-6 sm:py-4 md:px-10 md:py-6 bg-slate-950/50 border-2 border-slate-800 rounded-xl md:rounded-[2.2rem] text-[10px] md:text-[11px] text-slate-500 hover:text-white hover:border-brand-primary/30 transition-all uppercase tracking-[0.2em] md:tracking-[0.4em] font-black group/btn active:scale-95"
                         >
                             <Upload className="w-4 h-4 md:w-5 md:h-5 text-brand-primary" /> 
                             Import Audio / PDF / Text

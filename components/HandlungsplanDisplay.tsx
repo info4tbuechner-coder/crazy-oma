@@ -18,7 +18,7 @@ const ResponseCard: React.FC<ResponseCardProps> = ({ title, text, type, onCopy, 
     const borderClass = type === 'clinical' ? 'border-brand-clinical/20' : 'border-slate-800';
 
     return (
-        <Card className={`${bgClass} ${borderClass} p-8 rounded-[2.5rem] group relative overflow-hidden transition-all duration-500 hover:border-brand-primary/30`}>
+        <Card className={`${bgClass} ${borderClass} p-4 sm:p-8 rounded-2xl sm:rounded-[2.5rem] group relative overflow-hidden transition-all duration-500 hover:border-brand-primary/30`}>
             <div className="flex justify-between items-center mb-6">
                 <span className={`text-[9px] font-black uppercase tracking-[0.4em] font-mono ${colorClass}`}>{title}</span>
                 <button 
@@ -52,7 +52,7 @@ const HandlungsplanDisplay: React.FC<HandlungsplanDisplayProps> = ({ plan }) => 
     return (
         <div className="space-y-8 animate-fade-in">
             {/* Fazit Section */}
-            <Card className="bg-brand-primary/[0.03] border-brand-primary/20 p-8 rounded-[3rem]">
+            <Card className="bg-brand-primary/[0.03] border-brand-primary/20 p-4 sm:p-8 rounded-2xl sm:rounded-[3rem]">
                 <div className="flex items-center gap-4 mb-6">
                     <div className="w-10 h-10 rounded-2xl bg-brand-primary/10 flex items-center justify-center text-brand-primary">
                         <LightBulbIcon className="w-6 h-6" />

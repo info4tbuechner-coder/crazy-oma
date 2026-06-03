@@ -9,9 +9,9 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ children, className = '', padding = 'md' }) => {
     const paddingClasses = {
-        sm: 'p-4',
-        md: 'p-6',
-        lg: 'p-8',
+        sm: 'p-3 sm:p-4',
+        md: 'p-4 sm:p-6',
+        lg: 'p-5 sm:p-8',
     };
 
     return (

@@ -230,7 +230,7 @@ ${data.handlungsplan.fazit}
         >
             {/* Primary Analysis HUB */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                <Card className="lg:col-span-5 p-8 md:p-20 rounded-[3rem] md:rounded-[4rem] bg-[#070e1a] border-slate-800 shadow-4xl flex flex-col items-center justify-center relative overflow-hidden group">
+                <Card className="lg:col-span-5 p-4 sm:p-10 md:p-20 rounded-[2rem] sm:rounded-[3rem] md:rounded-[4rem] bg-[#070e1a] border-slate-800 shadow-4xl flex flex-col items-center justify-center relative overflow-hidden group">
                     <div className="absolute top-0 left-0 w-full h-full terminal-grid opacity-5"></div>
                     <ScoreGauge score={res.score} />
                     <div className="mt-16 text-center">
@@ -241,7 +241,7 @@ ${data.handlungsplan.fazit}
                     </div>
                 </Card>
 
-                <Card className="lg:col-span-7 p-8 md:p-20 rounded-[3rem] md:rounded-[4rem] bg-[#070e1a]/95 border-slate-800 shadow-4xl relative overflow-hidden flex flex-col justify-between">
+                <Card className="lg:col-span-7 p-4 sm:p-10 md:p-20 rounded-[2rem] sm:rounded-[3rem] md:rounded-[4rem] bg-[#070e1a]/95 border-slate-800 shadow-4xl relative overflow-hidden flex flex-col justify-between">
                     <div className="space-y-12">
                         <div className="flex items-center justify-between">
                             <h3 className="text-[12px] md:text-[14px] font-black text-brand-primary uppercase tracking-[0.5em] md:tracking-[1em] font-mono flex items-center gap-6">
@@ -312,7 +312,7 @@ ${data.handlungsplan.fazit}
                     <h3 className="text-[11px] md:text-[13px] font-black text-slate-700 uppercase tracking-[1em] md:tracking-[2em] font-mono whitespace-nowrap overflow-hidden text-ellipsis">Forensic_Mirror</h3>
                     <div className="h-[1px] w-full bg-slate-900 shadow-inner"></div>
                 </div>
-                <Card className={`scanline-container p-6 md:p-24 rounded-[3rem] md:rounded-[5rem] border-slate-800 bg-[#03070d] shadow-2xl relative overflow-hidden`}>
+                <Card className={`scanline-container p-4 sm:p-12 md:p-24 rounded-2xl sm:rounded-[3rem] md:rounded-[5rem] border-slate-800 bg-[#03070d] shadow-2xl relative overflow-hidden`}>
                     <div className="absolute inset-0 terminal-grid opacity-5 pointer-events-none"></div>
                     <div className="flex flex-col lg:flex-row justify-between items-start mb-12 md:mb-20 gap-8 relative z-10">
                         <div className="space-y-4">
@@ -331,7 +331,7 @@ ${data.handlungsplan.fazit}
                             </Button>
                         </div>
                     </div>
-                    <div className="forensic-mirror text-slate-300 text-base md:text-3xl font-mono whitespace-pre-wrap p-6 md:p-20 border border-slate-900/60 rounded-[2.5rem] md:rounded-[4rem] bg-slate-950/60 leading-[1.8] md:leading-[2.6] antialiased relative z-10 shadow-[inset_0_0_80px_rgba(0,0,0,0.8)] overflow-hidden min-h-[300px] md:min-h-[500px]">
+                    <div className="forensic-mirror text-slate-300 text-base md:text-3xl font-mono whitespace-pre-wrap p-4 sm:p-10 md:p-20 border border-slate-900/60 rounded-xl sm:rounded-[2.5rem] md:rounded-[4rem] bg-slate-950/60 leading-[1.8] md:leading-[2.6] antialiased relative z-10 shadow-[inset_0_0_80px_rgba(0,0,0,0.8)] overflow-hidden min-h-[300px] md:min-h-[500px]">
                         <div className="absolute top-0 left-0 w-full h-full bg-brand-primary/[0.005] pointer-events-none"></div>
                         {highlightedText}
                     </div>
