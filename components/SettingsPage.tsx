@@ -35,13 +35,21 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, onSettingsChange 
                 <div className="space-y-4">
                     <div className="flex justify-between items-end">
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] font-mono">Maximale Protokolllänge (Zeichen)</label>
-                        <span className="text-xl font-mono font-bold text-brand-primary">{settings.maxProtocolLength.toLocaleString()}</span>
+                        <input
+                            type="number"
+                            min="1000"
+                            max="500000"
+                            step="5000"
+                            value={settings.maxProtocolLength}
+                            onChange={(e) => handleChange('maxProtocolLength', parseInt(e.target.value) || 1000)}
+                            className="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1 text-lg font-mono font-bold text-brand-primary w-32 focus:outline-none focus:border-brand-primary"
+                        />
                     </div>
                     <input 
                         type="range" 
                         min="1000" 
-                        max="50000" 
-                        step="1000"
+                        max="500000" 
+                        step="5000"
                         value={settings.maxProtocolLength}
                         onChange={(e) => handleChange('maxProtocolLength', parseInt(e.target.value))}
                         className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-primary"

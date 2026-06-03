@@ -11,6 +11,7 @@ import { DownloadIcon, ExpandIcon, ShrinkIcon, InfoIcon, FileIcon } from './ui/I
 import PrintPreviewModal from './PrintPreviewModal';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
 import { PatternSummaryGrid } from './PatternSummaryGrid';
+import { SentimentTrendChart } from './SentimentTrendChart';
 
 interface AnalysisDisplayProps {
     state: {
@@ -37,6 +38,39 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ state }) => {
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
+
+    // Save summary logic
+    const saveSummary = useCallback((data: AnalysisResult) => {
+        const summary = `
+# Zusammenfassung: ${new Date().toLocaleString()}
+
+## Analyse
+${data.zusammenfassung}
+
+## Ergebnisse
+- Score: ${data.score}
+- Muster gefunden: ${data.erkannte_muster.length}
+
+## Handlungsplan
+${data.handlungsplan.fazit}
+`;
+        const blob = new Blob([summary], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Zusammenfassung_${new Date().toISOString()}.md`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }, []);
+
+    useEffect(() => {
+        if (state.status === 'success' && state.data) {
+            // Option: Automatic save or just enabled button.
+            // Let's just make it easy for user to click button.
+        }
+    }, [state.status, state.data, saveSummary]);
+
 
     const toggleFullScreen = useCallback(() => {
         if (!containerRef.current) return;
@@ -214,14 +248,22 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ state }) => {
                                 <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-ping"></span>
                                 Executive Dossier
                             </h3>
-                            <span className="text-[8px] font-mono text-slate-700 bg-slate-950 px-3 py-1 rounded-md border border-slate-800 hidden sm:inline-block">SIG_TYPE: OMEGA_SYNTH</span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-[8px] font-mono text-slate-700 bg-slate-950 px-3 py-1 rounded-md border border-slate-800 hidden sm:inline-block">SIG_TYPE: OMEGA_SYNTH</span>
+                                <button 
+                                    onClick={() => saveSummary(res)}
+                                    className="text-[8px] font-mono text-brand-primary border border-brand-primary px-3 py-1 rounded-md hover:bg-brand-primary hover:text-white transition-colors uppercase"
+                                >
+                                    SAVE_MD
+                                </button>
+                            </div>
                         </div>
                         <p className="text-white text-2xl md:text-5xl font-display font-bold leading-[1.15] tracking-tight italic decoration-brand-primary/10 decoration-[8px] md:decoration-[12px] underline-offset-[-6px] md:underline-offset-[-10px] underline">
                             {res.zusammenfassung}
                         </p>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-16 border-t border-slate-800/50 mt-16">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-16 border-t border-slate-800/50 mt-16">
                         <div className="space-y-6">
                             <h4 className="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em] font-mono">Linguistic Radar</h4>
                             <div className="h-48">
@@ -237,6 +279,14 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ state }) => {
                         <div className="space-y-6">
                             <h4 className="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em] font-mono">Fingerprint Analysis</h4>
                             <FingerprintDisplay fingerprint={res.linguistischer_fingerabdruck} />
+                        </div>
+                        <div className="space-y-6">
+                            <h4 className="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em] font-mono">Sentiment Trend</h4>
+                            {res.sentiment_evolution ? (
+                                <SentimentTrendChart data={res.sentiment_evolution} />
+                            ) : (
+                                <div className="text-[10px] font-mono text-slate-700 italic">Keine Verlaufsdaten verfügbar</div>
+                            )}
                         </div>
                     </div>
                 </Card>

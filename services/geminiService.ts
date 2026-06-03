@@ -136,3 +136,20 @@ REQUIRED: OMEGA_PROTOCOL execution. Fully map all narcissistic and manipulative 
         original_text: conversation 
     };
 };
+
+export const transcribeAudio = async (audioBase64: string, mimeType: string): Promise<string> => {
+    const response = await fetch('/api/transcribe', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ audioBase64, mimeType }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Transcription failed');
+    }
+
+    const data = await response.json();
+    return data.text;
+};

@@ -24,7 +24,7 @@ type AnalysisState = {
 };
 
 const DEFAULT_SETTINGS: AppSettings = {
-    maxProtocolLength: 30000,
+    maxProtocolLength: 100000,
     toxicityThreshold: 70,
     detailLevel: 'standard',
     enableCrtEffect: true
@@ -69,6 +69,13 @@ const App: React.FC = () => {
             window.removeEventListener('offline', handleOffline);
         };
     }, []);
+
+    // Automatic migration to increase limit if previously persisted state was smaller
+    useEffect(() => {
+        if (settings && settings.maxProtocolLength < 100000) {
+            setSettings(prev => ({ ...prev, maxProtocolLength: 100000 }));
+        }
+    }, [settings.maxProtocolLength, setSettings]);
 
     const handlePanic = useCallback(() => {
         vibrate([50, 100, 50]);

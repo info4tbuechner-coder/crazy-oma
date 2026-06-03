@@ -48,4 +48,5 @@ export interface AnalysisResult {
         vorschlag_antwort: OptimizedResponse;
     };
     original_text: string;
+    sentiment_evolution?: { time: number; score: number }[]; // Added sentiment evolution
 }
