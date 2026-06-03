@@ -26,6 +26,7 @@ export interface AppSettings {
     toxicityThreshold: number;
     detailLevel: 'kompakt' | 'standard' | 'tiefgreifend';
     enableCrtEffect: boolean;
+    courtMode: boolean;
 }
 
 export interface AnalysisResult {

@@ -100,6 +100,29 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, onSettingsChange 
                         {settings.detailLevel === 'tiefgreifend' && "Maximale Nutzung des 'Thinking Budgets' für komplexe linguistische Dekonstruktion."}
                     </p>
                 </div>
+
+                {/* Court Mode Standard */}
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center bg-slate-950/40 border-2 border-slate-800 rounded-2xl p-6">
+                        <div className="space-y-1 pr-4">
+                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] font-mono block">Familiengerichts-Standard (Gutachten-Modus)</label>
+                            <p className="text-xs text-slate-500">Strikte forensische Neutralität, objektive Belegführung und Verwendung anerkannter familienpsychologischer Kriterien (z.B. Kooperationsverhalten, Kindeswohlfaktoren, Abgrenzungsverhalten). Vermeidet reißerische Kampfbegriffe und liefert gerichtsverwertbare Ergebnisse für Jugendämter, Rechtsanwälte oder Gutachter.</p>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => handleChange('courtMode', !settings.courtMode)}
+                            className={`w-14 h-8 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 shrink-0 ${
+                                settings.courtMode ? 'bg-brand-primary' : 'bg-slate-800'
+                            }`}
+                        >
+                            <div
+                                className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${
+                                    settings.courtMode ? 'translate-x-6' : 'translate-x-0'
+                                }`}
+                            />
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div className="mt-16 pt-8 border-t border-slate-800 flex justify-between items-center opacity-40">

@@ -1,7 +1,25 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { AnalysisResult } from '../types';
 
-const getSystemInstruction = () => `SYSTEM-PROTOKOLL: 'RDA-OMEGA' v4.8 Forensic Suite.
+const getSystemInstruction = (courtMode: boolean = true) => {
+    if (courtMode) {
+        return `SYSTEM-PROTOKOLL: FAM-COMM-EVAL v5.2 – Forensisch-Psychologisches Kommunikationsgutachten für das Familiengericht.
+AUFTRAG: Wissenschaftlich-sachliche Untersuchung elterlicher und interpersoneller Interaktionsmuster und Kommunikationsvektoren mit Fokus auf Bindungsfürsorge, Kooperationseignung, Kindeswohlfaktoren und psychologische Abgrenzungsmuster.
+
+ANALYSESCHWERPUNKTE (BELEGBASIERT & SACHLICH):
+1. INTERAKTIONSEIGENTÜMLICHKEITEN: Objektive Dekonstruktion der Diskrepanz zwischen vordergründiger Botschaft und tatsächlichem, funktionalem Kommunikationsziel (z.B. Erzeugung von Loyalitätskonflikten, Grenzüberschreitungen, partnerschaftliche/elterliche Abwertungen).
+2. LINGUISTISCHE BELEGFÜHRUNG: Sachlicher Nachweis destruktiver Techniken wie Gaslighting (systematisches Infragestellen von Erziehungskompetenz oder Realitätswahrnehmung), Schuldumkehr (DARVO), Projektion, unbegründetem Druckaufbau und manipulativer Schuldzuweisung.
+3. KINDESWOHL- & KOOPERATIONSRELEVANZ: Analyse, inwiefern die Kommunikation auf funktionales Co-Parenting (gemeinsame Sorge) ausgelegt ist oder dieses aktiv blockiert/sabotiert.
+4. STRATEGISCHE DEESKALATION (BIFF-METHODE): Formulierung klinisch-sachlicher, kurzer, rein informativer, freundlich-bestimmter (Brief, Informative, Friendly, Firm) und nicht-reaktiver Antwortmuster, um weiteren Konflikteskalationen entgegenzuwirken.
+
+STIL- UND FORMULIERUNGSVORGABE (MANDATORISCH):
+- Absolut neutraler, nüchterner, sachlicher und gutachterlicher Tonfall (wertungsfrei, aber analytisch präzise).
+- Verwendung etablierter familienpsychologischer und interaktionstheoretischer Fachbegriffe (z.B. Kooperationskompetenz, Bindungsfürsorge, Grenzverletzung, emotionale Instrumentalisierung, zirkuläre Konfliktmuster).
+- Vermeidung von populär- oder küchenpsychologischen Diagnosen (z.B. "Narzissmus" oder "Psychopath" als direkte Etiketten vermeiden; stattdessen exakt beschreiben als "hochgradig egozentrierte Interaktionsdynamiken", "destruktive Beziehungs- und Machtansprüche", oder "Mangel an empathischer Perspektivenübernahme").
+- Jedes gefundene Muster MUSS extrem präzise an einem wörtlichen Textzitat belegt werden. Keine haltlosen Interpretationen.`;
+    }
+
+    return `SYSTEM-PROTOKOLL: 'RDA-OMEGA' v4.8 Forensic Suite.
 AUFTRAG: Dekonstruktion hochmanipulativer Cluster-B Kommunikationsvektoren mit maximaler analytischer Präzision.
 
 ANALYSE-MODI (FORCIERT):
@@ -11,6 +29,7 @@ ANALYSE-MODI (FORCIERT):
 4. GREY ROCK INTERVENTION: Generiere klinisch-neutrale, deeskalierende Antworten, die keine emotionale Angriffsfläche bieten.
 
 STIL-VORGABE: Absolut unbestechlich, klinisch-kalt, analytisch dominant. Keine Floskeln, sondern forensische Evidenz. Nutze Fachterminologie präzise.`;
+};
 
 const responseSchema = {
     type: Type.OBJECT,
@@ -78,7 +97,7 @@ const cleanJsonResponse = (text: string): string => {
     return text.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
 };
 
-export const analyzeConversation = async (conversation: string, context: string, detailLevel: string = 'standard'): Promise<AnalysisResult> => {
+export const analyzeConversation = async (conversation: string, context: string, detailLevel: string = 'standard', courtMode: boolean = true): Promise<AnalysisResult> => {
     const ai = new GoogleGenAI({ 
         apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY || '',
         httpOptions: {
@@ -88,7 +107,16 @@ export const analyzeConversation = async (conversation: string, context: string,
         }
     });
     
-    const prompt = `FORENSIC_MISSION: DECONSTRUCT_PAYLOAD
+    const prompt = courtMode 
+        ? `GUTACHTERLICHE KOMMUNIKATIONSEVALUATION
+ANALYSESTANDARD: FAMILIENGERICHTLICHES BEWERTUNGSVERFAHREN
+KONTEXT DER ELTERNLICHEN INTERAKTION: ${context}
+TRANSKRIPT / PROXIMALER KOMMUNIKATIONS-STREAM:
+"""
+${conversation}
+"""
+AUFTRAG: Führe ein wissenschaftlich-psychologisches Kommunikationsgutachten auf Basis des übermittelten Gesprächsmaterials durch. Halte dich an den neutralen, sachlichen Stil ohne polemische Begriffe.`
+        : `FORENSIC_MISSION: DECONSTRUCT_PAYLOAD
 PRIORITY: MAX
 CONTEXT_DYNAMICS: ${context}
 RAW_STREAM:
@@ -101,7 +129,7 @@ REQUIRED: OMEGA_PROTOCOL execution. Fully map all narcissistic and manipulative 
     const thinkingBudget = detailLevel === 'tiefgreifend' ? 32768 : 24576;
 
     const baseConfig: any = {
-        systemInstruction: getSystemInstruction(),
+        systemInstruction: getSystemInstruction(courtMode),
         responseMimeType: "application/json",
         responseSchema: responseSchema,
         temperature: 0.1,

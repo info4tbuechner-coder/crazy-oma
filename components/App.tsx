@@ -27,7 +27,8 @@ const DEFAULT_SETTINGS: AppSettings = {
     maxProtocolLength: 100000,
     toxicityThreshold: 70,
     detailLevel: 'standard',
-    enableCrtEffect: true
+    enableCrtEffect: true,
+    courtMode: true
 };
 
 const App: React.FC = () => {
@@ -101,7 +102,7 @@ const App: React.FC = () => {
         setAnalysisState({ status: 'loading', data: null, error: null });
         
         try {
-            const result = await analyzeConversation(conversation, context, settings.detailLevel);
+            const result = await analyzeConversation(conversation, context, settings.detailLevel, settings.courtMode);
             setAnalysisState({ status: 'success', data: result, error: null });
             addAnalysis(result);
             vibrate([20, 40, 20]);
