@@ -1,9 +1,39 @@
-
 import React, { useState } from 'react';
-import type { AnalysisResult, Advice, OptimizedResponse } from '../types';
+import type { AnalysisResult } from '../types';
 import Card from './ui/Card';
 import { CopyIcon, CheckIcon, LightBulbIcon } from './ui/Icons';
 import AdviceCard from './AdviceCard';
+
+interface ResponseCardProps {
+    title: string;
+    text: string;
+    type: 'neutral' | 'clinical';
+    onCopy: () => void;
+    isCopied: boolean;
+}
+
+const ResponseCard: React.FC<ResponseCardProps> = ({ title, text, type, onCopy, isCopied }) => {
+    const colorClass = type === 'clinical' ? 'text-brand-clinical' : 'text-slate-400';
+    const bgClass = type === 'clinical' ? 'bg-brand-clinical/[0.03]' : 'bg-slate-900/40';
+    const borderClass = type === 'clinical' ? 'border-brand-clinical/20' : 'border-slate-800';
+
+    return (
+        <Card className={`${bgClass} ${borderClass} p-8 rounded-[2.5rem] group relative overflow-hidden transition-all duration-500 hover:border-brand-primary/30`}>
+            <div className="flex justify-between items-center mb-6">
+                <span className={`text-[9px] font-black uppercase tracking-[0.4em] font-mono ${colorClass}`}>{title}</span>
+                <button 
+                    onClick={onCopy}
+                    className="p-2.5 rounded-xl bg-slate-950/50 border border-slate-800 text-slate-500 hover:text-brand-primary transition-all active:scale-95"
+                >
+                    {isCopied ? <CheckIcon className="w-4 h-4 text-brand-clinical" /> : <CopyIcon className="w-4 h-4" />}
+                </button>
+            </div>
+            <p className="text-slate-300 text-sm md:text-base leading-relaxed font-mono selection:bg-brand-primary/40 whitespace-pre-wrap">
+                {text}
+            </p>
+        </Card>
+    );
+};
 
 interface HandlungsplanDisplayProps {
     plan: AnalysisResult['handlungsplan'];
@@ -62,37 +92,6 @@ const HandlungsplanDisplay: React.FC<HandlungsplanDisplayProps> = ({ plan }) => 
                 </div>
             </div>
         </div>
-    );
-};
-
-interface ResponseCardProps {
-    title: string;
-    text: string;
-    type: 'neutral' | 'clinical';
-    onCopy: () => void;
-    isCopied: boolean;
-}
-
-const ResponseCard: React.FC<ResponseCardProps> = ({ title, text, type, onCopy, isCopied }) => {
-    const colorClass = type === 'clinical' ? 'text-brand-clinical' : 'text-slate-400';
-    const bgClass = type === 'clinical' ? 'bg-brand-clinical/[0.03]' : 'bg-slate-900/40';
-    const borderClass = type === 'clinical' ? 'border-brand-clinical/20' : 'border-slate-800';
-
-    return (
-        <Card className={`${bgClass} ${borderClass} p-8 rounded-[2.5rem] group relative overflow-hidden transition-all duration-500 hover:border-brand-primary/30`}>
-            <div className="flex justify-between items-center mb-6">
-                <span className={`text-[9px] font-black uppercase tracking-[0.4em] font-mono ${colorClass}`}>{title}</span>
-                <button 
-                    onClick={onCopy}
-                    className="p-2.5 rounded-xl bg-slate-950/50 border border-slate-800 text-slate-500 hover:text-brand-primary transition-all active:scale-95"
-                >
-                    {isCopied ? <CheckIcon className="w-4 h-4 text-brand-clinical" /> : <CopyIcon className="w-4 h-4" />}
-                </button>
-            </div>
-            <p className="text-slate-300 text-sm md:text-base leading-relaxed font-mono selection:bg-brand-primary/40">
-                {text}
-            </p>
-        </Card>
     );
 };
 

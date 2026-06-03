@@ -1,5 +1,5 @@
 {
-  "name": "Crazy Oma | RDA Pro Suite",
+  "name": "Remix: Crazy Oma | RDA Pro Suite",
   "short_name": "RDA Pro",
   "description": "Forensische Analyse-Suite zur Dekonstruktion manipulativer Kommunikationsmuster.",
   "requestFramePermissions": [
@@ -15,5 +15,8 @@
     "medical",
     "productivity",
     "health"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
   ]
 }

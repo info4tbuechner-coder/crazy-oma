@@ -10,6 +10,7 @@ import HandlungsplanDisplay from './HandlungsplanDisplay';
 import { DownloadIcon, ExpandIcon, ShrinkIcon, InfoIcon, FileIcon } from './ui/Icons';
 import PrintPreviewModal from './PrintPreviewModal';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
+import { PatternSummaryGrid } from './PatternSummaryGrid';
 
 interface AnalysisDisplayProps {
     state: {
@@ -241,6 +242,20 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ state }) => {
                 </Card>
             </div>
 
+            {/* Pattern Threat Matrix Grid */}
+            <div className="space-y-12">
+                <div className="flex items-center gap-6 md:gap-10 px-4 md:px-8">
+                    <h3 className="text-[11px] md:text-[13px] font-black text-slate-700 uppercase tracking-[1em] md:tracking-[2em] font-mono whitespace-nowrap">Bedrohungs_Matrix</h3>
+                    <div className="h-[1px] w-full bg-slate-900 shadow-inner"></div>
+                </div>
+                <PatternSummaryGrid 
+                    patterns={res.erkannte_muster}
+                    activePatternId={activePatternId}
+                    onSelectPattern={setActivePatternId}
+                    onLocatePattern={scrollToPattern}
+                />
+            </div>
+
             {/* Forensic Visualization (The Mirror) */}
             <div className="space-y-12">
                  <div className="flex items-center gap-6 md:gap-10 px-4 md:px-8">
@@ -292,6 +307,7 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ state }) => {
                     {res.erkannte_muster.map((m) => (
                         <div 
                             key={m.id} 
+                            id={`pattern-dossier-${m.id}`}
                             ref={el => { patternRefs.current[m.id] = el; }}
                             onMouseEnter={() => !isMobile && setActivePatternId(m.id)}
                             onMouseLeave={() => !isMobile && setActivePatternId(null)}

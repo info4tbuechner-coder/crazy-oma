@@ -79,7 +79,14 @@ const cleanJsonResponse = (text: string): string => {
 };
 
 export const analyzeConversation = async (conversation: string, context: string, detailLevel: string = 'standard'): Promise<AnalysisResult> => {
-    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
+    const ai = new GoogleGenAI({ 
+        apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY || '',
+        httpOptions: {
+            headers: {
+                'User-Agent': 'aistudio-build'
+            }
+        }
+    });
     
     const prompt = `FORENSIC_MISSION: DECONSTRUCT_PAYLOAD
 PRIORITY: MAX
@@ -90,19 +97,24 @@ ${conversation}
 """
 REQUIRED: OMEGA_PROTOCOL execution. Fully map all narcissistic and manipulative vectors.`;
     
-    const modelName = detailLevel === 'kompakt' ? 'gemini-3-flash-preview' : 'gemini-3-pro-preview';
+    const modelName = detailLevel === 'kompakt' ? 'gemini-3.5-flash' : 'gemini-3.1-pro-preview';
     const thinkingBudget = detailLevel === 'tiefgreifend' ? 32768 : 24576;
+
+    const baseConfig: any = {
+        systemInstruction: getSystemInstruction(),
+        responseMimeType: "application/json",
+        responseSchema: responseSchema,
+        temperature: 0.1,
+    };
+
+    if (modelName === 'gemini-3.1-pro-preview') {
+        baseConfig.thinkingConfig = { thinkingBudget };
+    }
 
     const response = await ai.models.generateContent({
         model: modelName,
         contents: prompt,
-        config: {
-            systemInstruction: getSystemInstruction(),
-            responseMimeType: "application/json",
-            responseSchema: responseSchema,
-            temperature: 0.1,
-            thinkingConfig: { thinkingBudget }
-        }
+        config: baseConfig
     });
 
     if (!response.text) throw new Error("Keine Daten von der OMEGA-Unit erhalten.");

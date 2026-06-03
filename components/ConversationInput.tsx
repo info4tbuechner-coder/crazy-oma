@@ -47,7 +47,8 @@ const ConversationInput: React.FC<ConversationInputProps> = ({ onAnalyze, isLoad
 
     return (
         <div className="space-y-6 md:space-y-12 animate-slide-up">
-            <Card className="border-slate-800 bg-slate-900/50 relative overflow-hidden p-0 rounded-3xl md:rounded-[4rem] shadow-3xl border-2 hover:border-slate-700 transition-all group/input">
+            {/* Added ID for Tour */}
+            <Card id="tour-input-area" className="border-slate-800 bg-slate-900/50 relative overflow-hidden p-0 rounded-3xl md:rounded-[4rem] shadow-3xl border-2 hover:border-slate-700 transition-all group/input">
                 <div className="absolute top-0 left-0 w-2 h-full bg-brand-primary opacity-20 group-hover:opacity-60 transition-opacity duration-1000"></div>
                 
                 <div className="p-6 md:p-14 space-y-6 md:space-y-12">
@@ -120,6 +121,7 @@ const ConversationInput: React.FC<ConversationInputProps> = ({ onAnalyze, isLoad
 
                 <div className="px-6 pb-6 md:px-14 md:pb-14 md:pt-0">
                     <Button 
+                        id="tour-analyze-btn" // Added ID for Tour
                         onClick={() => onAnalyze(conversation, context)} 
                         isLoading={isLoading} 
                         disabled={isLimitExceeded || !conversation.trim()}
