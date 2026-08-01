@@ -19,7 +19,7 @@ const PatternCard: React.FC<PatternCardProps> = ({ pattern, isActive }) => {
         <article 
             className={`
                 relative flex flex-col h-full overflow-hidden transition-all duration-500 group
-                rounded-2xl sm:rounded-[3rem] border-2 backdrop-blur-2xl
+                rounded-[3rem] border-2 backdrop-blur-2xl
                 ${isActive ? `scale-[1.02] z-20 ${config.border} bg-[#0b1221]` : 'border-slate-800 bg-[#050a14] hover:border-slate-600'}
                 ${config.glow}
             `}
@@ -27,7 +27,7 @@ const PatternCard: React.FC<PatternCardProps> = ({ pattern, isActive }) => {
             {/* Top Security Strip */}
             <div className={`h-1.5 w-full ${pattern.schweregrad === 'kritisch' ? 'bg-brand-accent animate-pulse' : (pattern.schweregrad === 'hoch' ? 'bg-brand-accent' : 'bg-slate-800')}`}></div>
 
-            <div className="p-5 sm:p-8 md:p-12 flex flex-col h-full relative z-10">
+            <div className="p-8 md:p-12 flex flex-col h-full relative z-10">
                 {/* Background Grid Pattern */}
                 <div className="absolute inset-0 terminal-grid opacity-[0.03] pointer-events-none"></div>
                 

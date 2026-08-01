@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import Modal from './ui/Modal';
 import Button from './ui/Button';
@@ -16,29 +16,68 @@ interface PdfPreviewModalProps {
 const PdfPreviewModal: React.FC<PdfPreviewModalProps> = ({ file, onClose, onExtract }) => {
     const [numPages, setNumPages] = useState<number>(0);
     const [isExtracting, setIsExtracting] = useState(false);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const renderTaskRef = useRef<any>(null);
     
-    const renderPdf = useCallback(async (canvas: HTMLCanvasElement) => {
-        try {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            setNumPages(pdf.numPages);
-            
-            const page = await pdf.getPage(1);
-            const viewport = page.getViewport({ scale: 1.5 });
-            const context = canvas.getContext('2d');
-            
-            if (context) {
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-                await (page.render(renderContext as any) as any).promise;
+    useEffect(() => {
+        let isCancelled = false;
+
+        const render = async () => {
+            if (!canvasRef.current) return;
+
+            try {
+                if (renderTaskRef.current) {
+                    try {
+                        await renderTaskRef.current.cancel();
+                    } catch (e) {
+                        // Ignore cancellation errors
+                    }
+                }
+
+                const arrayBuffer = await file.arrayBuffer();
+                if (isCancelled) return;
+
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                const pdf = await loadingTask.promise;
+                
+                if (isCancelled) return;
+                setNumPages(pdf.numPages);
+                
+                const page = await pdf.getPage(1);
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = canvasRef.current;
+                
+                if (!canvas) return;
+
+                const context = canvas.getContext('2d');
+                
+                if (context) {
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    
+                    const renderTask = page.render(renderContext as any);
+                    renderTaskRef.current = renderTask;
+                    await renderTask.promise;
+                }
+            } catch (error: any) {
+                if (error.name !== 'RenderingCancelledException') {
+                    console.error("Failed to render PDF preview", error);
+                }
             }
-        } catch (error) {
-            console.error("Failed to render PDF preview", error);
-        }
+        };
+
+        render();
+
+        return () => {
+            isCancelled = true;
+            if (renderTaskRef.current) {
+                renderTaskRef.current.cancel();
+            }
+        };
     }, [file]);
 
     const handleExtractText = async () => {
@@ -76,7 +115,7 @@ const PdfPreviewModal: React.FC<PdfPreviewModalProps> = ({ file, onClose, onExtr
                 
                 <div className="bg-slate-950/80 p-6 rounded-[2.5rem] border border-slate-800 overflow-auto max-h-[50vh] flex justify-center shadow-inner crt-effect">
                     <canvas 
-                        ref={(node) => { if (node) renderPdf(node); }}
+                        ref={canvasRef}
                         className="rounded-xl shadow-2xl"
                     />
                 </div>

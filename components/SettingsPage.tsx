@@ -14,7 +14,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, onSettingsChange 
     };
 
     return (
-        <Card className="animate-fade-in border-slate-800 p-6 sm:p-10 rounded-2xl sm:rounded-[3rem] bg-slate-900/40 relative overflow-hidden">
+        <Card className="animate-fade-in border-slate-800 p-10 rounded-[3rem] bg-slate-900/40 relative overflow-hidden">
             <div className="absolute inset-0 terminal-grid opacity-[0.05] pointer-events-none"></div>
             
             <div className="flex items-center gap-6 mb-12 border-b border-slate-800 pb-8 relative z-10">
@@ -35,21 +35,13 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, onSettingsChange 
                 <div className="space-y-4">
                     <div className="flex justify-between items-end">
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] font-mono">Maximale Protokolllänge (Zeichen)</label>
-                        <input
-                            type="number"
-                            min="1000"
-                            max="500000"
-                            step="5000"
-                            value={settings.maxProtocolLength}
-                            onChange={(e) => handleChange('maxProtocolLength', parseInt(e.target.value) || 1000)}
-                            className="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1 text-lg font-mono font-bold text-brand-primary w-32 focus:outline-none focus:border-brand-primary"
-                        />
+                        <span className="text-xl font-mono font-bold text-brand-primary">{settings.maxProtocolLength.toLocaleString()}</span>
                     </div>
                     <input 
                         type="range" 
                         min="1000" 
-                        max="500000" 
-                        step="5000"
+                        max="50000" 
+                        step="1000"
                         value={settings.maxProtocolLength}
                         onChange={(e) => handleChange('maxProtocolLength', parseInt(e.target.value))}
                         className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-primary"
@@ -99,29 +91,6 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ settings, onSettingsChange 
                         {settings.detailLevel === 'standard' && "Ausgewogenes Verhältnis zwischen Geschwindigkeit und analytischer Tiefe."}
                         {settings.detailLevel === 'tiefgreifend' && "Maximale Nutzung des 'Thinking Budgets' für komplexe linguistische Dekonstruktion."}
                     </p>
-                </div>
-
-                {/* Court Mode Standard */}
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center bg-slate-950/40 border-2 border-slate-800 rounded-2xl p-6">
-                        <div className="space-y-1 pr-4">
-                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] font-mono block">Familiengerichts-Standard (Gutachten-Modus)</label>
-                            <p className="text-xs text-slate-500">Strikte forensische Neutralität, objektive Belegführung und Verwendung anerkannter familienpsychologischer Kriterien (z.B. Kooperationsverhalten, Kindeswohlfaktoren, Abgrenzungsverhalten). Vermeidet reißerische Kampfbegriffe und liefert gerichtsverwertbare Ergebnisse für Jugendämter, Rechtsanwälte oder Gutachter.</p>
-                        </div>
-                        <button
-                            type="button"
-                            onClick={() => handleChange('courtMode', !settings.courtMode)}
-                            className={`w-14 h-8 flex items-center rounded-full p-1 cursor-pointer transition-colors duration-300 shrink-0 ${
-                                settings.courtMode ? 'bg-brand-primary' : 'bg-slate-800'
-                            }`}
-                        >
-                            <div
-                                className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${
-                                    settings.courtMode ? 'translate-x-6' : 'translate-x-0'
-                                }`}
-                            />
-                        </button>
-                    </div>
                 </div>
             </div>
 

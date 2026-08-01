@@ -4,28 +4,22 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "tsx server.ts",
-    "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
-    "start": "node dist/server.cjs",
-    "lint": "tsc --noEmit"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "tsc --noEmit",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "1.27.0",
-    "@headlessui/react": "2.2.9",
-    "express": "^4.21.2",
-    "lucide-react": "^1.17.0",
-    "motion": "^12.40.0",
-    "pdfjs-dist": "4.4.168",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "recharts": "2.13.0"
+    "pdfjs-dist": "4.4.168",
+    "@google/genai": "1.27.0",
+    "recharts": "2.13.0",
+    "@headlessui/react": "2.2.9"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
     "@types/node": "^22.14.0",
     "@vitejs/plugin-react": "^5.0.0",
-    "esbuild": "^0.25.0",
-    "tsx": "^4.19.3",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
   }

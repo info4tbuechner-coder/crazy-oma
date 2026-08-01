@@ -29,7 +29,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSuccess }) => {
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/5 rounded-full blur-[100px] pointer-events-none animate-pulse-slow"></div>
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-secondary/5 rounded-full blur-[100px] pointer-events-none animate-pulse-slow delay-1000"></div>
 
-            <div className={`max-w-md w-full p-6 sm:p-10 bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] z-10 ${error ? 'animate-shake' : ''}`}>
+            <div className={`max-w-md w-full p-10 bg-slate-900/80 backdrop-blur-xl border border-slate-800 rounded-3xl shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] z-10 ${error ? 'animate-shake' : ''}`}>
                 <div className="text-center mb-10">
                     <div className="w-16 h-16 bg-brand-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-brand-primary/20 shadow-inner">
                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">

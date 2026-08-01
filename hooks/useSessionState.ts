@@ -14,15 +14,13 @@ export function useSessionState<T>(key: string, initialValue: T): [T, (value: T 
 
     const setValue = useCallback((value: T | ((val: T) => T)) => {
         try {
-            setStoredValue(prevValue => {
-                const valueToStore = value instanceof Function ? value(prevValue) : value;
-                window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
-                return valueToStore;
-            });
+            const valueToStore = value instanceof Function ? value(storedValue) : value;
+            setStoredValue(valueToStore);
+            window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
         } catch (error) {
             console.error(error);
         }
-    }, [key]);
+    }, [key, storedValue]);
 
     return [storedValue, setValue];
 }

@@ -26,7 +26,6 @@ export interface AppSettings {
     toxicityThreshold: number;
     detailLevel: 'kompakt' | 'standard' | 'tiefgreifend';
     enableCrtEffect: boolean;
-    courtMode: boolean;
 }
 
 export interface AnalysisResult {
@@ -49,5 +48,4 @@ export interface AnalysisResult {
         vorschlag_antwort: OptimizedResponse;
     };
     original_text: string;
-    sentiment_evolution?: { time: number; score: number }[]; // Added sentiment evolution
 }

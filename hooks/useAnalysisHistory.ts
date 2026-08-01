@@ -26,5 +26,5 @@ export const useAnalysisHistory = () => {
         setHistory([]);
     }, [setHistory]);
 
-    return { history, addAnalysis, removeAnalysis, clearHistory, setHistory };
+    return { history, addAnalysis, removeAnalysis, clearHistory };
 };

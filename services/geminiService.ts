@@ -1,25 +1,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import type { AnalysisResult } from '../types';
 
-const getSystemInstruction = (courtMode: boolean = true) => {
-    if (courtMode) {
-        return `SYSTEM-PROTOKOLL: FAM-COMM-EVAL v5.2 – Forensisch-Psychologisches Kommunikationsgutachten für das Familiengericht.
-AUFTRAG: Wissenschaftlich-sachliche Untersuchung elterlicher und interpersoneller Interaktionsmuster und Kommunikationsvektoren mit Fokus auf Bindungsfürsorge, Kooperationseignung, Kindeswohlfaktoren und psychologische Abgrenzungsmuster.
-
-ANALYSESCHWERPUNKTE (BELEGBASIERT & SACHLICH):
-1. INTERAKTIONSEIGENTÜMLICHKEITEN: Objektive Dekonstruktion der Diskrepanz zwischen vordergründiger Botschaft und tatsächlichem, funktionalem Kommunikationsziel (z.B. Erzeugung von Loyalitätskonflikten, Grenzüberschreitungen, partnerschaftliche/elterliche Abwertungen).
-2. LINGUISTISCHE BELEGFÜHRUNG: Sachlicher Nachweis destruktiver Techniken wie Gaslighting (systematisches Infragestellen von Erziehungskompetenz oder Realitätswahrnehmung), Schuldumkehr (DARVO), Projektion, unbegründetem Druckaufbau und manipulativer Schuldzuweisung.
-3. KINDESWOHL- & KOOPERATIONSRELEVANZ: Analyse, inwiefern die Kommunikation auf funktionales Co-Parenting (gemeinsame Sorge) ausgelegt ist oder dieses aktiv blockiert/sabotiert.
-4. STRATEGISCHE DEESKALATION (BIFF-METHODE): Formulierung klinisch-sachlicher, kurzer, rein informativer, freundlich-bestimmter (Brief, Informative, Friendly, Firm) und nicht-reaktiver Antwortmuster, um weiteren Konflikteskalationen entgegenzuwirken.
-
-STIL- UND FORMULIERUNGSVORGABE (MANDATORISCH):
-- Absolut neutraler, nüchterner, sachlicher und gutachterlicher Tonfall (wertungsfrei, aber analytisch präzise).
-- Verwendung etablierter familienpsychologischer und interaktionstheoretischer Fachbegriffe (z.B. Kooperationskompetenz, Bindungsfürsorge, Grenzverletzung, emotionale Instrumentalisierung, zirkuläre Konfliktmuster).
-- Vermeidung von populär- oder küchenpsychologischen Diagnosen (z.B. "Narzissmus" oder "Psychopath" als direkte Etiketten vermeiden; stattdessen exakt beschreiben als "hochgradig egozentrierte Interaktionsdynamiken", "destruktive Beziehungs- und Machtansprüche", oder "Mangel an empathischer Perspektivenübernahme").
-- Jedes gefundene Muster MUSS extrem präzise an einem wörtlichen Textzitat belegt werden. Keine haltlosen Interpretationen.`;
-    }
-
-    return `SYSTEM-PROTOKOLL: 'RDA-OMEGA' v4.8 Forensic Suite.
+const getSystemInstruction = () => `SYSTEM-PROTOKOLL: 'RDA-OMEGA' v4.8 Forensic Suite.
 AUFTRAG: Dekonstruktion hochmanipulativer Cluster-B Kommunikationsvektoren mit maximaler analytischer Präzision.
 
 ANALYSE-MODI (FORCIERT):
@@ -29,7 +11,6 @@ ANALYSE-MODI (FORCIERT):
 4. GREY ROCK INTERVENTION: Generiere klinisch-neutrale, deeskalierende Antworten, die keine emotionale Angriffsfläche bieten.
 
 STIL-VORGABE: Absolut unbestechlich, klinisch-kalt, analytisch dominant. Keine Floskeln, sondern forensische Evidenz. Nutze Fachterminologie präzise.`;
-};
 
 const responseSchema = {
     type: Type.OBJECT,
@@ -94,29 +75,25 @@ const responseSchema = {
 };
 
 const cleanJsonResponse = (text: string): string => {
-    return text.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
+    let cleaned = text.trim();
+    const jsonMatch = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+    if (jsonMatch && jsonMatch[1]) {
+        cleaned = jsonMatch[1].trim();
+    } else {
+        cleaned = cleaned.replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
+    }
+    return cleaned;
 };
 
-export const analyzeConversation = async (conversation: string, context: string, detailLevel: string = 'standard', courtMode: boolean = true): Promise<AnalysisResult> => {
-    const ai = new GoogleGenAI({ 
-        apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY || '',
-        httpOptions: {
-            headers: {
-                'User-Agent': 'aistudio-build'
-            }
-        }
-    });
+export const analyzeConversation = async (conversation: string, context: string, detailLevel: string = 'standard'): Promise<AnalysisResult> => {
+    const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+        throw new Error("API-Schlüssel (GEMINI_API_KEY) ist nicht konfiguriert oder fehlt.");
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
     
-    const prompt = courtMode 
-        ? `GUTACHTERLICHE KOMMUNIKATIONSEVALUATION
-ANALYSESTANDARD: FAMILIENGERICHTLICHES BEWERTUNGSVERFAHREN
-KONTEXT DER ELTERNLICHEN INTERAKTION: ${context}
-TRANSKRIPT / PROXIMALER KOMMUNIKATIONS-STREAM:
-"""
-${conversation}
-"""
-AUFTRAG: Führe ein wissenschaftlich-psychologisches Kommunikationsgutachten auf Basis des übermittelten Gesprächsmaterials durch. Halte dich an den neutralen, sachlichen Stil ohne polemische Begriffe.`
-        : `FORENSIC_MISSION: DECONSTRUCT_PAYLOAD
+    const prompt = `FORENSIC_MISSION: DECONSTRUCT_PAYLOAD
 PRIORITY: MAX
 CONTEXT_DYNAMICS: ${context}
 RAW_STREAM:
@@ -125,59 +102,67 @@ ${conversation}
 """
 REQUIRED: OMEGA_PROTOCOL execution. Fully map all narcissistic and manipulative vectors.`;
     
-    const modelName = detailLevel === 'kompakt' ? 'gemini-3.5-flash' : 'gemini-3.1-pro-preview';
-    const thinkingBudget = detailLevel === 'tiefgreifend' ? 32768 : 24576;
+    const modelName = 'gemini-3.6-flash';
+    const thinkingBudget = detailLevel === 'kompakt' ? 1024 : 8192;
 
-    const baseConfig: any = {
-        systemInstruction: getSystemInstruction(courtMode),
-        responseMimeType: "application/json",
-        responseSchema: responseSchema,
-        temperature: 0.1,
-    };
-
-    if (modelName === 'gemini-3.1-pro-preview') {
-        baseConfig.thinkingConfig = { thinkingBudget };
+    let response;
+    const maxRetries = 2;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            response = await ai.models.generateContent({
+                model: modelName,
+                contents: prompt,
+                config: {
+                    systemInstruction: getSystemInstruction(),
+                    responseMimeType: "application/json",
+                    responseSchema: responseSchema,
+                    temperature: 0.1,
+                    thinkingConfig: { thinkingBudget }
+                }
+            });
+            break;
+        } catch (err: any) {
+            const errMsg = String(err?.message || err || '');
+            const isQuotaError = errMsg.includes('429') || 
+                                 errMsg.includes('resource_exhausted') || 
+                                 errMsg.includes('Quota exceeded') || 
+                                 errMsg.includes('rate limit');
+            
+            if (isQuotaError && attempt < maxRetries) {
+                await new Promise(res => setTimeout(res, 2000 * attempt));
+                continue;
+            }
+            if (isQuotaError) {
+                throw new Error("API-Kontingent erreicht (429 / Quota Exceeded): Ihr aktuelles Gemini API-Limit ist vorübergehend ausgeschöpft. Bitte warten Sie kurz und versuchen Sie es dann erneut.");
+            }
+            throw err;
+        }
     }
 
-    const response = await ai.models.generateContent({
-        model: modelName,
-        contents: prompt,
-        config: baseConfig
-    });
+    if (!response || !response.text) {
+        throw new Error("Keine Daten von der OMEGA-Unit erhalten. Bitte versuchen Sie es erneut.");
+    }
 
-    if (!response.text) throw new Error("Keine Daten von der OMEGA-Unit erhalten.");
+    let parsedResult;
+    try {
+        parsedResult = JSON.parse(cleanJsonResponse(response.text));
+    } catch (parseError) {
+        console.error("JSON Parse Error:", parseError, "Raw text:", response.text);
+        throw new Error("Fehler bei der Analyse der forensischen Antwortstruktur. Bitte versuchen Sie es erneut.");
+    }
 
-    const result = JSON.parse(cleanJsonResponse(response.text));
-
-    result.erkannte_muster = (result.erkannte_muster || []).map((m: any) => {
+    parsedResult.erkannte_muster = (parsedResult.erkannte_muster || []).map((m: any) => {
         const id = crypto.randomUUID();
-        const start = conversation.toLowerCase().indexOf(m.zitat.toLowerCase());
+        const start = conversation.toLowerCase().indexOf((m.zitat || '').toLowerCase());
         return start !== -1 
-            ? { ...m, id, startIndex: start, endIndex: start + m.zitat.length } 
+            ? { ...m, id, startIndex: start, endIndex: start + (m.zitat || '').length } 
             : { ...m, id };
     });
 
     return { 
-        ...result, 
+        ...parsedResult, 
         id: crypto.randomUUID(), 
         timestamp: Date.now(), 
         original_text: conversation 
     };
-};
-
-export const transcribeAudio = async (audioBase64: string, mimeType: string): Promise<string> => {
-    const response = await fetch('/api/transcribe', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ audioBase64, mimeType }),
-    });
-
-    if (!response.ok) {
-        throw new Error('Transcription failed');
-    }
-
-    const data = await response.json();
-    return data.text;
 };

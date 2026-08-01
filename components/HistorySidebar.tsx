@@ -1,10 +1,10 @@
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { useAnalysisHistory } from '../hooks/useAnalysisHistory';
 import { AnalysisResult } from '../types';
-import { XIcon, TrashIcon, DownloadIcon, FileIcon, UploadIcon } from './ui/Icons';
+// Import FileIcon from the ui/Icons file
+import { XIcon, TrashIcon, DownloadIcon, FileIcon } from './ui/Icons';
 import Button from './ui/Button';
-import { encrypt, decrypt } from '../utils/crypto';
 
 interface HistorySidebarProps {
     isOpen: boolean;
@@ -13,48 +13,18 @@ interface HistorySidebarProps {
 }
 
 const HistorySidebar: React.FC<HistorySidebarProps> = ({ isOpen, onClose, onLoadAnalysis }) => {
-    const { history, removeAnalysis, clearHistory, setHistory } = useAnalysisHistory();
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { history, removeAnalysis, clearHistory } = useAnalysisHistory();
 
-    const exportHistory = async () => {
-        const password = window.prompt("Passwort für die Verschlüsselung eingeben:");
-        if (!password) return;
-
-        try {
-            const encryptedData = await encrypt(JSON.stringify(history), password);
-            const blob = new Blob([encryptedData], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `rda_pro_backup_${new Date().toISOString()}.aes`;
-            link.click();
-            URL.revokeObjectURL(url);
-        } catch (e) {
-            alert("Fehler bei der Verschlüsselung.");
-        }
+    const exportHistory = () => {
+        const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
+            JSON.stringify(history, null, 2)
+        )}`;
+        const link = document.createElement("a");
+        link.href = jsonString;
+        link.download = `rda_pro_history_${new Date().toISOString()}.json`;
+        link.click();
     };
     
-    const importHistory = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        const password = window.prompt("Passwort zum Entschlüsseln eingeben:");
-        if (!password) return;
-
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-            try {
-                const encryptedData = event.target?.result as string;
-                const decryptedData = await decrypt(encryptedData, password);
-                setHistory(JSON.parse(decryptedData));
-                alert("Historie erfolgreich wiederhergestellt.");
-            } catch (e) {
-                alert("Fehler bei der Entschlüsselung. Falsches Passwort oder beschädigte Datei.");
-            }
-        };
-        reader.readAsText(file);
-    };
-
     return (
         <div className={`fixed inset-0 z-50 transition-all duration-300 ${isOpen ? 'bg-black/60 backdrop-blur-sm' : 'pointer-events-none bg-transparent opacity-0'}`} onClick={onClose}>
             <div
@@ -101,15 +71,10 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ isOpen, onClose, onLoad
                                     </div>
                                 ))}
                             </div>
-                             <div className="p-6 border-t border-slate-800 bg-slate-900/50 flex gap-3 flex-wrap">
+                             <div className="p-6 border-t border-slate-800 bg-slate-900/50 flex gap-3">
                                 <Button onClick={exportHistory} variant="secondary" size="sm" className="flex-1 !rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest text-[10px]">
                                     <DownloadIcon className="h-4 w-4" />
                                     Export
-                                </Button>
-                                <input type="file" ref={fileInputRef} onChange={importHistory} className="hidden" accept=".aes" />
-                                <Button onClick={() => fileInputRef.current?.click()} variant="secondary" size="sm" className="flex-1 !rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest text-[10px]">
-                                    <UploadIcon className="h-4 w-4" />
-                                    Import
                                 </Button>
                                 <Button onClick={() => { if(window.confirm('Verlauf wirklich komplett löschen?')) clearHistory(); }} variant="danger" size="sm" className="flex-1 !rounded-xl !bg-red-950/30 !text-red-400 !border-red-900/30 flex items-center justify-center gap-2 uppercase tracking-widest text-[10px]">
                                     <TrashIcon className="h-4 w-4" />
@@ -123,11 +88,6 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ isOpen, onClose, onLoad
                                 <FileIcon className="h-8 w-8" />
                             </div>
                             <p className="text-slate-500 text-sm font-medium">Der Verlauf ist aktuell leer. Starten Sie eine neue Analyse zur Archivierung.</p>
-                            <input type="file" ref={fileInputRef} onChange={importHistory} className="hidden" accept=".aes" />
-                            <Button onClick={() => fileInputRef.current?.click()} variant="secondary" size="sm" className="!rounded-xl flex items-center justify-center gap-2 uppercase tracking-widest text-[10px]">
-                                <UploadIcon className="h-4 w-4" />
-                                Import
-                            </Button>
                         </div>
                     )}
                 </div>
